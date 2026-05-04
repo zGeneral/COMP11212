@@ -38,7 +38,8 @@ If the `Activate.ps1` script is blocked on Windows, run PowerShell as admin once
 │   ├── 01_interpreter.ipynb     # N1 — walk-through of the interpreter
 │   ├── 02_syntax.ipynb          # N2 — Chapter 1 syntax + Examples 1-6 + Exercises 1-10
 │   ├── 03_semantics.ipynb       # N3 — Chapter 2 §2.1-2.4 + Examples 7-11 + Exercises 11-16
-│   └── 04_reasoning.ipynb       # N4 — Propositions 2/3 + Exercises 17-18 + quiz + bridge
+│   ├── 04_reasoning.ipynb       # N4 — Propositions 2/3 + Exercises 17-18 + quiz + bridge
+│   └── 05_quiz.ipynb            # N5 — 20-question self-quiz with auto-scoring
 ├── chapter1.txt, chapter2.txt   # course chapters (untracked — Manchester copyright)
 ├── lecture_transcripts/         # lecture transcripts (untracked)
 ├── exersise*_solution.txt       # official solutions provided (untracked)
@@ -61,6 +62,7 @@ Throughout the notebooks you'll see cells labelled **🎯 PREDICT**. These are t
 | N2 | BNF grammar, ambiguity, all 6 chapter examples, exercises 1–10 | Working While programs for division, gcd, primality, sqrt, Fibonacci |
 | N3 | States, σ-updates, the small-step rules, examples 7–11, exercises 11–16 | Exercise 14 (Diophantine) showpiece — full formal trace |
 | N4 | Propositions 2 & 3 (associativity), exercises 17 & 18 (proof-style), quiz, bridge to exam notation | "Translate Python intuition → exam-style proofs" section |
+| N5 | 20-question self-quiz spanning everything: syntax, grammar, states, A/B, all 5 small-step rules, traces, termination, reasoning | Auto-scored. Section breakdown tells you which area to re-read if a section drops below 100% |
 
 ## The interpreter — quick reference
 
