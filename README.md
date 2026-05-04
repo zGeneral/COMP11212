@@ -2,6 +2,8 @@
 
 Interactive study materials for *Fundamentals of Computation*, Part 2, Week 6 (University of Manchester). Four Jupyter notebooks built around a working interpreter for the **While** language that prints traces in the formal small-step operational-semantics notation — `⟨S, σ⟩ ⇒ ⟨S', σ'⟩` — produced by Python you can read.
 
+📎 **See [CHEATSHEET.md](CHEATSHEET.md)** for a one-stop reference: every symbol with how to *pronounce* it, every concept mapped to its Python equivalent, the 6 inference rules, and exam-style phrasing.
+
 ## Quick start
 
 ### Windows (PowerShell)
