@@ -231,7 +231,9 @@ def step(cfg: Config) -> Transition | None:
         # special case: skip; T  ⇒  T
         if isinstance(s.first, Skip):
             return Transition(cfg, Config(s.second, sigma), "skip-;")
-        # general case: take a step of S, keep T as remainder
+        # general case: take a step of S, keep T as remainder.
+        # We propagate the inner rule's label up — the ; rule is "transparent",
+        # what we report is the actual work that happened inside.
         sub = step(Config(s.first, sigma))
         if sub is None:
             # impossible — Skip handled above, no other terminal
@@ -239,7 +241,7 @@ def step(cfg: Config) -> Transition | None:
         return Transition(
             cfg,
             Config(Seq(sub.after.stmt, s.second), sub.after.state),
-            ";",
+            sub.rule,
         )
 
     # if b then S else (S')
@@ -275,6 +277,48 @@ def step_iter(prog: Stmt | str, state: dict[str, int],
         yield t
         cfg = t.after
     raise StepBudgetExceeded(f"exceeded {max_steps} steps")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Step counting for complexity analysis (Chapter 3)
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Per the chapter (§3.1.4), a "step" counts only:
+#   - Assignments  (the := rule)
+#   - Boolean condition checks  (the if-tt/ff and while-tt/ff rules each
+#     evaluate one boolean expression)
+# The administrative ; and skip-; rules don't count — they're not work the
+# program is doing, they're just syntactic bookkeeping in the small-step
+# semantics.
+COUNTED_RULES = frozenset({":=", "if-tt", "if-ff", "while-tt", "while-ff"})
+
+
+def count_steps(prog, state=None, max_steps=1_000_000):
+    """
+    Count chapter-style 'steps' (assignments + boolean checks) for one run.
+    Raises StepBudgetExceeded if the program does not terminate.
+    """
+    if state is None:
+        state = {}
+    n = 0
+    for t in step_iter(prog, state, max_steps=max_steps):
+        if t.rule in COUNTED_RULES:
+            n += 1
+    return n
+
+
+def step_growth(prog, state_fn, sizes, max_steps=1_000_000):
+    """
+    Run the program for each input size in `sizes`, with the initial state
+    given by `state_fn(n)`. Returns {n: step_count}.
+
+    Used for empirical growth-rate measurement: plot the result and you can
+    visually identify the asymptotic complexity class.
+    """
+    out = {}
+    for n in sizes:
+        out[n] = count_steps(prog, state_fn(n), max_steps=max_steps)
+    return out
 
 
 # ─────────────────────────────────────────────────────────────────────────────

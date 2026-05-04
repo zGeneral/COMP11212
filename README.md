@@ -1,8 +1,13 @@
-# COMP11212 Week 6 — While Language Study Notebooks
+# COMP11212 — While Language Study Notebooks
 
-Interactive study materials for *Fundamentals of Computation*, Part 2, Week 6 (University of Manchester). Four Jupyter notebooks built around a working interpreter for the **While** language that prints traces in the formal small-step operational-semantics notation — `⟨S, σ⟩ ⇒ ⟨S', σ'⟩` — produced by Python you can read.
+Interactive study materials for *Fundamentals of Computation*, Part 2 (University of Manchester). A series of Jupyter notebooks built around a working interpreter for the **While** language. Currently covers:
 
-📎 **See [CHEATSHEET.md](CHEATSHEET.md)** for a one-stop reference: every symbol with how to *pronounce* it, every concept mapped to its Python equivalent, the 6 inference rules, and exam-style phrasing.
+- **Week 6 (Chapters 1–2):** syntax + small-step operational semantics. Traces in the formal `⟨S, σ⟩ ⇒ ⟨S', σ'⟩` notation, produced by Python you can read.
+- **Week 7 (Chapter 3):** complexity and asymptotic analysis. Step counting, recognising classes, big O / Ω / Θ formal definitions, growth-rate plots.
+
+📎 **Cheatsheets:**
+- [`CHEATSHEET.md`](CHEATSHEET.md) — chapters 1 and 2 (syntax + small-step semantics). Symbols with pronunciation, Python equivalents, the 6 inference rules, exam phrasing.
+- [`CHEATSHEET_COMPLEXITY.md`](CHEATSHEET_COMPLEXITY.md) — chapter 3 (complexity). Symbols + pronunciation, class hierarchy, recognition rules, simplification rules.
 
 ## Quick start
 
@@ -35,24 +40,29 @@ If the `Activate.ps1` script is blocked on Windows, run PowerShell as admin once
 ```
 .
 ├── notebooks/
-│   ├── while_lang.py            # the While interpreter (~570 lines, all you need)
-│   ├── requirements.txt         # lark + jupyter
-│   ├── 01_interpreter.ipynb     # N1 — walk-through of the interpreter
-│   ├── 02_syntax.ipynb          # N2 — Chapter 1 syntax + Examples 1-6 + Exercises 1-10
-│   ├── 03_semantics.ipynb       # N3 — Chapter 2 §2.1-2.4 + Examples 7-11 + Exercises 11-16
-│   ├── 04_reasoning.ipynb       # N4 — Propositions 2/3 + Exercises 17-18 + quiz + bridge
-│   └── 05_quiz.ipynb            # N5 — 20-question self-quiz with auto-scoring
-├── chapter1.txt, chapter2.txt   # course chapters (untracked — Manchester copyright)
-├── lecture_transcripts/         # lecture transcripts (untracked)
-├── exersise*_solution.txt       # official solutions provided (untracked)
-└── quiz.txt                     # week 6 quiz (untracked)
+│   ├── while_lang.py              # the While interpreter (~620 lines, plus count_steps + step_growth)
+│   ├── requirements.txt           # lark + jupyter + matplotlib
+│   ├── 01_interpreter.ipynb       # N1 — walk-through of the interpreter
+│   ├── 02_syntax.ipynb            # N2 — Chapter 1 syntax + Examples 1-6 + Exercises 1-10
+│   ├── 03_semantics.ipynb         # N3 — Chapter 2 §2.1-2.4 + Examples 7-11 + Exercises 11-16
+│   ├── 04_reasoning.ipynb         # N4 — Propositions 2/3 + Exercises 17-18 + quiz + bridge
+│   ├── 05_quiz.ipynb              # N5 — 20-question quiz on chapters 1-2
+│   ├── 06_counting_steps.ipynb    # N6 — Chapter 3 §3.1, 3.4, 3.5 + Exercises 19, 20, 23, 24, 25
+│   ├── 07_big_o.ipynb             # N7 — Chapter 3 §3.2, 3.3, 3.6 + Exercises 21, 22, 26, 27, 28, 29
+│   └── 08_quiz_chapter3.ipynb     # N8 — 20-question quiz on chapter 3
+├── CHEATSHEET.md                  # cheatsheet for chapters 1-2
+├── CHEATSHEET_COMPLEXITY.md       # cheatsheet for chapter 3
+├── chapter1.txt, chapter2.txt, chapter3.txt   # course chapters (untracked — Manchester copyright)
+├── lecture_transcripts/           # lecture transcripts (untracked)
+├── exersise*_solution.txt         # official solutions provided (untracked)
+└── quiz.txt                       # week 6 quiz (untracked)
 ```
 
 ## How to use the notebooks
 
-**Read them top-to-bottom in order — N1 → N2 → N3 → N4.** Each builds on the previous.
+**Read them top-to-bottom in order — N1 → N2 → ...** Each builds on the previous.
 
-Throughout the notebooks you'll see cells labelled **🎯 PREDICT**. These are the active-practice mechanism: they ask you to fill in your guess into a Python variable *before* running the next cell. The next cell uses `check_state(...)` or `check_steps(...)` to tell you if you got it right and shows the formal trace either way.
+Throughout the notebooks you'll see cells labelled **🎯 PREDICT**. These are the active-practice mechanism: they ask you to fill in your guess into a Python variable *before* running the next cell. The next cell uses `check_state(...)` / `check_steps(...)` / `count_steps(...)` to tell you if you got it right.
 
 **Don't skip the predict cells.** That's where the "real grok" lives. If you skim past them you're just reading code, not learning.
 
@@ -63,8 +73,11 @@ Throughout the notebooks you'll see cells labelled **🎯 PREDICT**. These are t
 | N1 | Interpreter mechanics: AST, states, A/B, `step`, three trace views | First full formal trace of a real program |
 | N2 | BNF grammar, ambiguity, all 6 chapter examples, exercises 1–10 | Working While programs for division, gcd, primality, sqrt, Fibonacci |
 | N3 | States, σ-updates, the small-step rules, examples 7–11, exercises 11–16 | Exercise 14 (Diophantine) showpiece — full formal trace |
-| N4 | Propositions 2 & 3 (associativity), exercises 17 & 18 (proof-style), quiz, bridge to exam notation | "Translate Python intuition → exam-style proofs" section |
-| N5 | 20-question self-quiz spanning everything: syntax, grammar, states, A/B, all 5 small-step rules, traces, termination, reasoning | Auto-scored. Section breakdown tells you which area to re-read if a section drops below 100% |
+| N4 | Propositions 2 & 3 (associativity), exercises 17 & 18, quiz, bridge to exam notation | "Translate Python intuition → exam-style proofs" section |
+| N5 | 20-question quiz on chapters 1–2 | Auto-scored; per-section breakdown |
+| N6 | Counting steps, recognising classes by inspection, exercises 19, 20, 23, 24, 25 | `count_steps()` and `step_growth()` over the chapter's worked examples |
+| N7 | Big O / Ω / Θ formal definitions, propositions 8–12, exercises 21, 22, 26, 27, 28, 29 | Growth-rate plots showing why O(n²) overtakes 100·n |
+| N8 | 20-question quiz on chapter 3 | Auto-scored; per-section breakdown |
 
 ## The interpreter — quick reference
 
