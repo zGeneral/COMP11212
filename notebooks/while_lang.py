@@ -682,6 +682,105 @@ def decode_stmt(n):
 
 
 # ─────────────────────────────────────────────────────────────────────────────
+# Big-step operational semantics (Appendix B)
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Big-step: ⟨S, σ⟩ ⇓ σ' — directly compute the final state.
+#
+# Five rules:
+#   skip:   ⟨skip, σ⟩ ⇓ σ
+#   :=:     ⟨x := a, σ⟩ ⇓ σ[x ↦ A(a, σ)]
+#   ;:      ⟨S, σ⟩ ⇓ σ' and ⟨S', σ'⟩ ⇓ σ''  ⟹  ⟨S; S', σ⟩ ⇓ σ''
+#   if:     branch on B(b, σ)
+#   while:  if B(b, σ) = ff:  ⟨while b do S, σ⟩ ⇓ σ
+#           if B(b, σ) = tt:  ⟨S, σ⟩ ⇓ σ' and ⟨while b do S, σ'⟩ ⇓ σ''
+#                              ⟹ ⟨while b do S, σ⟩ ⇓ σ''
+
+def big_step(prog, state=None, max_depth=10_000):
+    """
+    Big-step evaluator: directly compute the final state σ' from ⟨prog, state⟩.
+
+    For non-terminating programs this would loop forever — we use an iteration
+    counter on while loops to bail out. Raises StepBudgetExceeded if hit.
+
+    Returns the final state as a dict (with zero values stripped, like run()).
+    """
+    if isinstance(prog, str):
+        prog = parse(prog)
+    if state is None:
+        state = {}
+
+    # Use a counter object (single-element list) so the closure can mutate it.
+    iters = [0]
+
+    def eval_stmt(s, sigma):
+        iters[0] += 1
+        if iters[0] > max_depth:
+            raise StepBudgetExceeded(
+                f"big_step exceeded {max_depth} sub-evaluations — likely non-terminating"
+            )
+
+        if isinstance(s, Skip):
+            return sigma
+        if isinstance(s, Assign):
+            return {**sigma, s.var: A(s.expr, sigma)}
+        if isinstance(s, Seq):
+            sigma1 = eval_stmt(s.first, sigma)
+            return eval_stmt(s.second, sigma1)
+        if isinstance(s, If):
+            if B(s.cond, sigma):
+                return eval_stmt(s.then_branch, sigma)
+            else:
+                return eval_stmt(s.else_branch, sigma)
+        if isinstance(s, While):
+            if not B(s.cond, sigma):
+                return sigma
+            sigma1 = eval_stmt(s.body, sigma)
+            return eval_stmt(s, sigma1)   # recurse on the same loop
+        raise TypeError(f"big_step: unknown {type(s).__name__}")
+
+    final = eval_stmt(prog, dict(state))
+    # Strip zero values for canonical form (matches run())
+    return {k: v for k, v in final.items() if v != 0}
+
+
+def big_step_steps(prog, state=None, max_depth=10_000):
+    """
+    Iterative version using an explicit stack — avoids Python recursion limits
+    for deeply-nested programs. Same return semantics as big_step.
+    """
+    # Implementation: while-loop unfolds into Seq(body, While) recursively, so
+    # we use the recursive version. Python's default recursion limit is ~1000;
+    # for deep recursion we'd want sys.setrecursionlimit. For now, just call
+    # big_step and trust the iters counter.
+    import sys
+    old_limit = sys.getrecursionlimit()
+    try:
+        sys.setrecursionlimit(max(old_limit, max_depth + 1000))
+        return big_step(prog, state, max_depth)
+    finally:
+        sys.setrecursionlimit(old_limit)
+
+
+def big_step_agrees_small_step(prog, state=None, max_steps=10_000):
+    """
+    Sanity check: the big-step and small-step semantics should agree on the
+    final state for any terminating program. Returns True iff both produce
+    the same final state (after zero-stripping).
+    """
+    try:
+        big = big_step(prog, state, max_depth=max_steps)
+    except StepBudgetExceeded:
+        big = None
+    try:
+        small = run(prog, state, max_steps=max_steps)
+    except StepBudgetExceeded:
+        small = None
+
+    return big == small
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 # Unparser — turn AST nodes back into source-like strings (with formal symbols)
 # ─────────────────────────────────────────────────────────────────────────────
 

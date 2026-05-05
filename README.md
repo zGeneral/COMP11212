@@ -7,6 +7,7 @@ Interactive study materials for *Fundamentals of Computation*, Part 2 (Universit
 - **Week 8 (Chapter 4):** Hoare logic — proving programs correct. Predicates, triples `{P} S {Q}`, the 6 partial-correctness rules, total correctness with loop variants, four worked examples (β, gcd, quadratic, Collatz).
 - **Week 9 (Chapter 5):** Computability — what can be computed at all. Computable functions, decidability, semidecidability, the Halting Problem, universal programs, Church-Turing thesis.
 - **Week 10 (Chapter 6):** Encodings — the bijections (β, φ, ψ, φ_S) that turn integers, pairs, lists, and While programs into natural numbers. Cantor's diagonal proof. Concrete Python implementations of every encoding.
+- **Appendix (math + big-step):** Math background recap (functions, relations, countability) + the *big-step operational semantics* — an alternative to chapter 2's small-step. Five rules, worked example for division, exercises 58–67.
 
 📎 **Cheatsheets:**
 - [`CHEATSHEET.md`](CHEATSHEET.md) — chapters 1 and 2 (syntax + small-step semantics). Symbols with pronunciation, Python equivalents, the 6 inference rules, exam phrasing.
@@ -14,6 +15,7 @@ Interactive study materials for *Fundamentals of Computation*, Part 2 (Universit
 - [`CHEATSHEET_HOARE.md`](CHEATSHEET_HOARE.md) — chapter 4 (Hoare logic). Symbols, the 6 partial rules, the total while rule, loop invariant + variant heuristics, exam-style derivation format.
 - [`CHEATSHEET_COMPUTABILITY.md`](CHEATSHEET_COMPUTABILITY.md) — chapter 5 (computability). Symbols, decidable vs semidecidable, the Halting-Problem proof skeleton, Church-Turing.
 - [`CHEATSHEET_ENCODINGS.md`](CHEATSHEET_ENCODINGS.md) — chapter 6 (encodings). β, φ, ψ, φ_S formulas, decoding recipes, Cantor diagonal proof template.
+- [`CHEATSHEET_APPENDIX.md`](CHEATSHEET_APPENDIX.md) — appendix (math + big-step). Math vocabulary, the 5 big-step rules, big-step vs small-step comparison.
 
 ## Quick start
 
@@ -63,13 +65,16 @@ If the `Activate.ps1` script is blocked on Windows, run PowerShell as admin once
 │   ├── 13_halting_universality.ipynb  # N13 — Chapter 5 §5.4-5.6 + Exercises 51, 52
 │   ├── 14_quiz_chapter5.ipynb     # N14 — 20-question quiz on chapter 5
 │   ├── 15_encodings.ipynb         # N15 — Chapter 6 (all of it) + Exercises 53-57
-│   └── 16_quiz_chapter6.ipynb     # N16 — 20-question quiz on chapter 6
+│   ├── 16_quiz_chapter6.ipynb     # N16 — 20-question quiz on chapter 6
+│   ├── 17_appendix.ipynb          # N17 — Appendix A + B (math + big-step) + Ex 58-67
+│   └── 18_quiz_appendix.ipynb     # N18 — 20-question quiz on the appendix
 ├── CHEATSHEET.md                  # cheatsheet for chapters 1-2
 ├── CHEATSHEET_COMPLEXITY.md       # cheatsheet for chapter 3
 ├── CHEATSHEET_HOARE.md            # cheatsheet for chapter 4
 ├── CHEATSHEET_COMPUTABILITY.md    # cheatsheet for chapter 5
 ├── CHEATSHEET_ENCODINGS.md        # cheatsheet for chapter 6
-├── chapter1.txt ... chapter6.txt  # course chapters (untracked — Manchester copyright)
+├── CHEATSHEET_APPENDIX.md         # cheatsheet for the appendix (math + big-step)
+├── chapter1.txt ... chapter6.txt, Appendix.txt   # course material (untracked — Manchester copyright)
 ├── lecture_transcripts/           # lecture transcripts (untracked)
 ├── exersise*_solution.txt         # official solutions provided (untracked)
 └── quiz.txt                       # week 6 quiz (untracked)
@@ -103,6 +108,8 @@ Throughout the notebooks you'll see cells labelled **🎯 PREDICT**. These are t
 | N14 | 20-question quiz on chapter 5 | Auto-scored; per-section breakdown |
 | N15 | Cantor diagonal, β / φ / ψ / φ_S encodings, exercises 53–57 | Working `encode_*` and `decode_*` Python — every chapter formula implemented |
 | N16 | 20-question quiz on chapter 6 | Auto-scored; per-section breakdown |
+| N17 | Math vocabulary recap + big-step operational semantics + exercises 58–67 | `big_step()` evaluator that agrees with small-step `run()` on all terminating programs |
+| N18 | 20-question quiz on the appendix | Auto-scored; per-section breakdown |
 
 ## The interpreter — quick reference
 
