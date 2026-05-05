@@ -403,6 +403,285 @@ def report_triple(precond, prog, postcond, sample_states,
 
 
 # ─────────────────────────────────────────────────────────────────────────────
+# Gödel encodings (Chapter 6) — bijections between data and ℕ
+# ─────────────────────────────────────────────────────────────────────────────
+
+# β: ℤ → ℕ  (and its inverse β')
+#   β(x)  = 2x        if x ≥ 0
+#         = -2x - 1   else
+#   β'(n) = n // 2    if n is even
+#         = -(n+1)//2 if n is odd
+
+def encode_int(x):
+    """β: ℤ → ℕ. Bijection from integers to naturals."""
+    return 2 * x if x >= 0 else -2 * x - 1
+
+
+def decode_int(n):
+    """β': ℕ → ℤ. Inverse of encode_int."""
+    return n // 2 if n % 2 == 0 else -((n + 1) // 2)
+
+
+# φ: ℕ × ℕ → ℕ  (and its inverse φ')
+#   φ(m, n) = 2^m * (2n + 1) - 1
+
+def encode_pair(m, n):
+    """φ: ℕ × ℕ → ℕ. Bijection from natural pairs to naturals."""
+    return (2 ** m) * (2 * n + 1) - 1
+
+
+def decode_pair(k):
+    """φ': ℕ → ℕ × ℕ. Inverse of encode_pair."""
+    if k < 0:
+        raise ValueError(f"decode_pair: input must be non-negative, got {k}")
+    s = k + 1                       # s = 2^m * (2n + 1)
+    m = 0
+    while s % 2 == 0:
+        s //= 2
+        m += 1
+    # Now s is odd, s = 2n + 1
+    n = (s - 1) // 2
+    return (m, n)
+
+
+# Triples + arbitrary tuples — apply φ recursively.
+def encode_tuple(*xs):
+    """Encode a tuple of naturals as a single natural via right-fold of φ."""
+    if not xs:
+        raise ValueError("encode_tuple: empty tuple has no encoding")
+    if len(xs) == 1:
+        return xs[0]
+    # φ(x₀, φ(x₁, φ(x₂, ...)))
+    rest = encode_tuple(*xs[1:])
+    return encode_pair(xs[0], rest)
+
+
+def decode_tuple(k, length):
+    """Decode a natural into a length-length tuple via right-fold of φ'."""
+    if length <= 0:
+        raise ValueError("decode_tuple: length must be positive")
+    if length == 1:
+        return (k,)
+    head, rest = decode_pair(k)
+    return (head,) + decode_tuple(rest, length - 1)
+
+
+# ψ: lists of ℕ → ℕ
+#   ψ([])     = 0
+#   ψ(n :: l) = φ(n, ψ(l)) + 1
+
+def encode_list(xs):
+    """ψ: lists of naturals → ℕ. Bijection."""
+    if not xs:
+        return 0
+    return encode_pair(xs[0], encode_list(xs[1:])) + 1
+
+
+def decode_list(k):
+    """ψ⁻¹: ℕ → list of naturals. Inverse of encode_list."""
+    if k == 0:
+        return []
+    head, rest = decode_pair(k - 1)
+    return [head] + decode_list(rest)
+
+
+# Variable encoding: φ_V(x_i) = i.
+# We assume variables are named "x_0", "x_1", ..., or just any string with a
+# numeric suffix after an underscore. For variables in chapter 1 examples (m,
+# n, x, y, etc.) we use a fixed mapping for compatibility.
+
+_VAR_INDEX = {}            # name -> index, populated lazily
+
+def encode_var(name):
+    """φ_V: variable name → ℕ. Lazily assigns indices in encounter order."""
+    if name not in _VAR_INDEX:
+        # If the name has a numeric suffix like "x_5", use that as the index
+        # to match the chapter's convention.
+        if "_" in name:
+            try:
+                idx = int(name.rsplit("_", 1)[1])
+                _VAR_INDEX[name] = idx
+                return idx
+            except ValueError:
+                pass
+        # Otherwise assign the next available index.
+        _VAR_INDEX[name] = len(_VAR_INDEX)
+    return _VAR_INDEX[name]
+
+
+def reset_var_indices():
+    """Reset the variable-name → index mapping (useful between independent encodings)."""
+    _VAR_INDEX.clear()
+
+
+# φ_A: AExp → ℕ
+#   φ_A(n)        = 5 * β'(n)             where n is a numeral; β' takes ℕ to ℤ
+#                                         (actually the chapter writes β'·n, treating numerals as ℤ)
+#   φ_A(x)        = 1 + 5 * φ_V(x)
+#   φ_A(a + a')   = 2 + 5 * φ(φ_A a, φ_A a')
+#   φ_A(a − a')   = 3 + 5 * φ(φ_A a, φ_A a')
+#   φ_A(a × a')   = 4 + 5 * φ(φ_A a, φ_A a')
+# Wait — chapter says "5 ⋅ β'n" but β' goes ℕ → ℤ; here n is a numeral meaning
+# an integer. The natural reading is: numerals can be any integer, encoded
+# via β. So φ_A(numeral n) = 5 * β(n).
+
+def encode_aexp(expr):
+    """φ_A: AExp → ℕ."""
+    if isinstance(expr, Num):
+        return 5 * encode_int(expr.value)
+    if isinstance(expr, Var):
+        return 1 + 5 * encode_var(expr.name)
+    if isinstance(expr, Add):
+        return 2 + 5 * encode_pair(encode_aexp(expr.left), encode_aexp(expr.right))
+    if isinstance(expr, Sub):
+        return 3 + 5 * encode_pair(encode_aexp(expr.left), encode_aexp(expr.right))
+    if isinstance(expr, Mul):
+        return 4 + 5 * encode_pair(encode_aexp(expr.left), encode_aexp(expr.right))
+    raise TypeError(f"encode_aexp: unknown {type(expr).__name__}")
+
+
+# φ_B: BExp → ℕ
+#   φ_B(ff)        = 0
+#   φ_B(tt)        = 1
+#   φ_B(a = a')    = 2 + 4 * φ(φ_A a, φ_A a')
+#   φ_B(a ≤ a')    = 3 + 4 * φ(φ_A a, φ_A a')
+#   φ_B(¬b)        = 4 + 4 * φ_B(b)
+#   φ_B(b ∧ b')    = 5 + 4 * φ(φ_B b, φ_B b')
+# Note: 5 + 4·k is one more than 4 + 4·k, but the cases for "= and ≤" use
+# φ(φ_A,...) which involves arithmetic encodings (typically ≥ 0), and the
+# cases for ¬ and ∧ use φ_B which can give 0 (for ff). The mapping is still
+# injective; all six branches produce distinct residues mod 4.
+# Wait — there are 6 cases here but only 4 residues mod 4. Let me re-check.
+# Looking at the chapter:
+#   ff: 0 (residue 0)
+#   tt: 1 (residue 1)
+#   = : 2 + 4k (residue 2)
+#   ≤ : 3 + 4k (residue 3)
+#   ¬ : 4 + 4k = 4(k+1) (residue 0)
+#   ∧ : 5 + 4k = 4(k+1) + 1 (residue 1)
+# So the residues do collide: {ff, ¬} both have residue 0; {tt, ∧} both have
+# residue 1. The chapter must distinguish via the size: ff = 0 specifically,
+# and 4 + 4k for ¬ is ≥ 4. tt = 1 specifically; ∧ gives 5 + 4k ≥ 5.
+# So the rule is: 0 = ff, 1 = tt, residue 2 = equality, residue 3 = ≤,
+# residue 0 with value ≥ 4 = ¬, residue 1 with value ≥ 5 = ∧.
+
+def encode_bexp(expr):
+    """φ_B: BExp → ℕ."""
+    if isinstance(expr, BFalse):
+        return 0
+    if isinstance(expr, BTrue):
+        return 1
+    if isinstance(expr, Eq):
+        return 2 + 4 * encode_pair(encode_aexp(expr.left), encode_aexp(expr.right))
+    if isinstance(expr, Le):
+        return 3 + 4 * encode_pair(encode_aexp(expr.left), encode_aexp(expr.right))
+    if isinstance(expr, Not):
+        return 4 + 4 * encode_bexp(expr.arg)
+    if isinstance(expr, And):
+        return 5 + 4 * encode_pair(encode_bexp(expr.left), encode_bexp(expr.right))
+    raise TypeError(f"encode_bexp: unknown {type(expr).__name__}")
+
+
+# φ_S: Stmt → ℕ
+#   φ_S(skip)              = 0
+#   φ_S(x ≔ a)              = 1 + 4 * φ(φ_V x, φ_A a)
+#   φ_S(S; S')              = 2 + 4 * φ(φ_S S, φ_S S')
+#   φ_S(if b then S else S') = 3 + 4 * φ(φ_B b, φ(φ_S S, φ_S S'))
+#   φ_S(while b do S)        = 4 + 4 * φ(φ_B b, φ_S S)
+
+def encode_stmt(stmt):
+    """φ_S: Stmt → ℕ."""
+    if isinstance(stmt, Skip):
+        return 0
+    if isinstance(stmt, Assign):
+        return 1 + 4 * encode_pair(encode_var(stmt.var), encode_aexp(stmt.expr))
+    if isinstance(stmt, Seq):
+        return 2 + 4 * encode_pair(encode_stmt(stmt.first), encode_stmt(stmt.second))
+    if isinstance(stmt, If):
+        return 3 + 4 * encode_pair(
+            encode_bexp(stmt.cond),
+            encode_pair(encode_stmt(stmt.then_branch), encode_stmt(stmt.else_branch)),
+        )
+    if isinstance(stmt, While):
+        return 4 + 4 * encode_pair(encode_bexp(stmt.cond), encode_stmt(stmt.body))
+    raise TypeError(f"encode_stmt: unknown {type(stmt).__name__}")
+
+
+def encode_program(source_or_ast):
+    """Convenience: parse if needed, then encode_stmt."""
+    if isinstance(source_or_ast, str):
+        return encode_stmt(parse(source_or_ast))
+    return encode_stmt(source_or_ast)
+
+
+# Decoders for AExp, BExp, Stmt — invert the encodings.
+def decode_aexp(n):
+    """φ_A⁻¹: ℕ → AExp."""
+    r = n % 5
+    q = n // 5
+    if r == 0:
+        return Num(decode_int(q))
+    if r == 1:
+        # q is the variable index. We can't recover the name without context,
+        # so synthesise a name "x_{q}".
+        return Var(f"x_{q}")
+    if r in (2, 3, 4):
+        a_idx, b_idx = decode_pair(q)
+        left = decode_aexp(a_idx)
+        right = decode_aexp(b_idx)
+        return {2: Add, 3: Sub, 4: Mul}[r](left, right)
+    raise ValueError(f"decode_aexp: invalid encoding {n}")
+
+
+def decode_bexp(n):
+    """φ_B⁻¹: ℕ → BExp."""
+    if n == 0:
+        return BFalse()
+    if n == 1:
+        return BTrue()
+    r = n % 4
+    q = n // 4
+    if r == 2:
+        a_idx, b_idx = decode_pair(q)
+        return Eq(decode_aexp(a_idx), decode_aexp(b_idx))
+    if r == 3:
+        a_idx, b_idx = decode_pair(q)
+        return Le(decode_aexp(a_idx), decode_aexp(b_idx))
+    if r == 0:
+        # ¬ case: n = 4 + 4·k for k = q-1
+        return Not(decode_bexp(q - 1))
+    if r == 1:
+        # ∧ case: n = 5 + 4·k for k = q-1 (since (5+4k) // 4 = 1 + k for k = (n-5)/4)
+        # Wait: (5 + 4k) // 4 = 1 + k.   (5 + 4k) % 4 = 1.   So q = 1 + k → k = q - 1.
+        a_idx, b_idx = decode_pair(q - 1)
+        return And(decode_bexp(a_idx), decode_bexp(b_idx))
+    raise ValueError(f"decode_bexp: invalid encoding {n}")
+
+
+def decode_stmt(n):
+    """φ_S⁻¹: ℕ → Stmt."""
+    if n == 0:
+        return Skip()
+    r = n % 4
+    q = n // 4
+    if r == 1:
+        v_idx, a_idx = decode_pair(q)
+        return Assign(f"x_{v_idx}", decode_aexp(a_idx))
+    if r == 2:
+        s_idx, s2_idx = decode_pair(q)
+        return Seq(decode_stmt(s_idx), decode_stmt(s2_idx))
+    if r == 3:
+        b_idx, rest = decode_pair(q)
+        s_idx, s2_idx = decode_pair(rest)
+        return If(decode_bexp(b_idx), decode_stmt(s_idx), decode_stmt(s2_idx))
+    if r == 0:
+        # while case: n = 4 + 4·k for k = q-1
+        b_idx, s_idx = decode_pair(q - 1)
+        return While(decode_bexp(b_idx), decode_stmt(s_idx))
+    raise ValueError(f"decode_stmt: invalid encoding {n}")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 # Unparser — turn AST nodes back into source-like strings (with formal symbols)
 # ─────────────────────────────────────────────────────────────────────────────
 
