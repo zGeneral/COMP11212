@@ -1,0 +1,95 @@
+NOTICE — Attribution and Source Materials
+==========================================
+
+This repository (`github.com/zGeneral/COMP11212`) is an **unofficial,
+student-built** companion to the COMP11212 module ("Fundamentals of
+Computation, Part 2") taught at the **University of Manchester** (UoM).
+
+It is NOT affiliated with, endorsed by, sponsored by, or maintained by:
+- The University of Manchester
+- The School of Computer Science
+- The teaching staff of COMP11212
+- Andrea Schalk (current course author)
+- Giles Reger or Gareth Henshall (prior contributors)
+- Dave Lester (original course author)
+
+It is built and maintained independently by Kamal Hassiba, an enrolled
+COMP11212 student, as a personal study and revision aid that he chose to
+make freely available to peers.
+
+----------------------------------------------------------------------------
+
+ABOUT THE SOURCE COURSE MATERIAL
+--------------------------------
+
+The University of Manchester COMP11212 course material — including but not
+limited to the chapter notes, the wording of exercises and examples, exercise
+solutions, exam papers, slide decks, and lecture transcripts — is © The
+University of Manchester (and its individual authors). This repository does
+NOT redistribute that material publicly:
+
+  - Files such as `chapter1.txt` ... `chapter6.txt`, `Appendix.txt`,
+    `quiz.txt`, the `lecture_transcripts/` directory, and any
+    `exersise*_solution.txt` are LOCAL-ONLY copies the author keeps for
+    personal study reference. They are listed in `.gitignore` and are NOT
+    committed to git or distributed.
+
+  - Numbered references such as "Example 7" or "Exercise 14" are used as
+    NAVIGATION LABELS so a student studying the course can find the matching
+    notebook section quickly. The labels are factual, not reproductions of
+    the copyrighted course material.
+
+  - The notebooks (and the companion playground at `while.hassiba.cc`)
+    contain the AUTHOR'S OWN exposition, the AUTHOR'S OWN program
+    implementations of textbook CS classics (gcd, division, factorial, sum,
+    fibonacci, Collatz, primality, etc.), and the AUTHOR'S OWN While-language
+    interpreter. They do NOT reproduce the chapter prose, the official
+    exercise prompts, or the official solutions.
+
+Students using this repository should refer to the OFFICIAL UoM course
+materials (distributed by the University) for the actual exercise text,
+problem statements, and chapter exposition.
+
+----------------------------------------------------------------------------
+
+WHAT THIS REPOSITORY OWNS
+-------------------------
+
+  - `notebooks/while_lang.py` — the While-language interpreter.
+    © 2026 Kamal Hassiba, MIT.
+  - `notebooks/*.ipynb` — the study notebooks themselves.
+    © 2026 Kamal Hassiba, MIT.
+  - `CHEATSHEET*.md` — the cheatsheets.
+    © 2026 Kamal Hassiba, MIT.
+
+The companion webapp at `while.hassiba.cc` (source:
+`github.com/zGeneral/COMP11212-web`) vendors `while_lang.py` from this
+repository under the same MIT license.
+
+----------------------------------------------------------------------------
+
+THIRD-PARTY DEPENDENCIES
+------------------------
+
+The notebooks use:
+  - lark (https://github.com/lark-parser/lark) — MIT
+  - matplotlib (https://matplotlib.org/) — PSF-derived BSD-style license
+  - jupyter (https://jupyter.org/) — BSD 3-Clause
+  - ipywidgets (https://ipywidgets.readthedocs.io/) — BSD 3-Clause
+
+----------------------------------------------------------------------------
+
+USE
+---
+
+This repository is licensed under the MIT License (see `LICENSE`). You may
+use, copy, modify, and distribute it freely, including for educational
+purposes, provided you include the LICENSE and this NOTICE in any
+redistribution.
+
+If you are a member of UoM staff and have concerns about the attribution
+language above, the choice of reference labels, or any other aspect of this
+project, please open an issue at
+https://github.com/zGeneral/COMP11212/issues or contact Kamal Hassiba
+directly. The author will respond promptly and is willing to revise the
+attribution, remove specific references, or take down the project if asked.

@@ -1,6 +1,14 @@
 # COMP11212 — While Language Study Notebooks
 
-Interactive study materials for *Fundamentals of Computation*, Part 2 (University of Manchester). A series of Jupyter notebooks built around a working interpreter for the **While** language.
+> ⚠️ **Unofficial student companion. Not affiliated with the University of Manchester.**
+>
+> Built by **Kamal Hassiba**, an enrolled COMP11212 student, as a personal study and revision aid made freely available to peers. **Not endorsed by, sponsored by, or maintained by** the University of Manchester, the School of Computer Science, the COMP11212 teaching staff, Andrea Schalk (current course author), Giles Reger, Gareth Henshall, or Dave Lester (prior contributors).
+>
+> Course material referenced by labels like "Example 7" or "Exercise 14" is © The University of Manchester and is **NOT redistributed in this repo**. Source `chapter*.txt`, `Appendix.txt`, `quiz.txt`, `lecture_transcripts/`, and any `exersise*_solution.txt` are local-only personal-study copies, gitignored and never committed. The notebooks contain only the author's own exposition, the author's own implementations of textbook CS classics, and the author's own While-language interpreter.
+>
+> See [NOTICE](NOTICE) for full attribution, scope, and contact for UoM staff who wish to raise concerns.
+
+Interactive study materials for *Fundamentals of Computation*, Part 2 (University of Manchester). A series of Jupyter notebooks built around a working interpreter for the **While** language. Free to use, MIT-licensed.
 
 > **🚀 Start here:** [`notebooks/00_pre_study.ipynb`](notebooks/00_pre_study.ipynb) — a 42-cell pre-study primer that gives the **whole-course map** in pure Python, with every formal-notation idea rendered side-by-side with its Python equivalent. Read it first (60–90 minutes); the formal notebooks below land much faster afterwards.
 
