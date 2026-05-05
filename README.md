@@ -1,7 +1,12 @@
 # COMP11212 — While Language Study Notebooks
 
-Interactive study materials for *Fundamentals of Computation*, Part 2 (University of Manchester). A series of Jupyter notebooks built around a working interpreter for the **While** language. Currently covers:
+Interactive study materials for *Fundamentals of Computation*, Part 2 (University of Manchester). A series of Jupyter notebooks built around a working interpreter for the **While** language.
 
+> **🚀 Start here:** [`notebooks/00_pre_study.ipynb`](notebooks/00_pre_study.ipynb) — a 42-cell pre-study primer that gives the **whole-course map** in pure Python, with every formal-notation idea rendered side-by-side with its Python equivalent. Read it first (60–90 minutes); the formal notebooks below land much faster afterwards.
+
+Currently covers:
+
+- **Pre-study primer (Notebook 00):** the whole course in one continuous Python notebook, with every formal-notation idea rendered side-by-side with its Python equivalent. ~35 cells, 4 predict cells, one interactive `ipywidgets` small-step stepper. Read this first to break the ice.
 - **Week 6 (Chapters 1–2):** syntax + small-step operational semantics. Traces in the formal `⟨S, σ⟩ ⇒ ⟨S', σ'⟩` notation, produced by Python you can read.
 - **Week 7 (Chapter 3):** complexity and asymptotic analysis. Step counting, recognising classes, big O / Ω / Θ formal definitions, growth-rate plots.
 - **Week 8 (Chapter 4):** Hoare logic — proving programs correct. Predicates, triples `{P} S {Q}`, the 6 partial-correctness rules, total correctness with loop variants, four worked examples (β, gcd, quadratic, Collatz).
@@ -26,7 +31,7 @@ Interactive study materials for *Fundamentals of Computation*, Part 2 (Universit
 python -m venv .venv
 .venv\Scripts\Activate.ps1
 pip install -r notebooks\requirements.txt
-jupyter notebook notebooks\01_interpreter.ipynb
+jupyter notebook notebooks\00_pre_study.ipynb
 ```
 
 ### macOS / Linux
@@ -36,10 +41,10 @@ jupyter notebook notebooks\01_interpreter.ipynb
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r notebooks/requirements.txt
-jupyter notebook notebooks/01_interpreter.ipynb
+jupyter notebook notebooks/00_pre_study.ipynb
 ```
 
-That opens N1 in your browser. Run cells top-to-bottom. Move on to N2 → N3 → N4 in order.
+That opens **the pre-study primer** in your browser. Read it through (60–90 min), then move on to N1 → N2 → N3 → N4 in order. The primer is ice-breaking; the formal notebooks are the deep dive.
 
 If the `Activate.ps1` script is blocked on Windows, run PowerShell as admin once and `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser`.
 
@@ -48,8 +53,9 @@ If the `Activate.ps1` script is blocked on Windows, run PowerShell as admin once
 ```
 .
 ├── notebooks/
-│   ├── while_lang.py              # the While interpreter (~620 lines, plus count_steps + step_growth)
+│   ├── while_lang.py              # the While interpreter (~900 lines: parser, semantics, complexity, Hoare, encoding, big-step)
 │   ├── requirements.txt           # lark + jupyter + matplotlib
+│   ├── 00_pre_study.ipynb         # N0 — pre-study primer (whole course in pure Python, side-by-side with formal notation)
 │   ├── 01_interpreter.ipynb       # N1 — walk-through of the interpreter
 │   ├── 02_syntax.ipynb            # N2 — Chapter 1 syntax + Examples 1-6 + Exercises 1-10
 │   ├── 03_semantics.ipynb         # N3 — Chapter 2 §2.1-2.4 + Examples 7-11 + Exercises 11-16
@@ -82,7 +88,7 @@ If the `Activate.ps1` script is blocked on Windows, run PowerShell as admin once
 
 ## How to use the notebooks
 
-**Read them top-to-bottom in order — N1 → N2 → ...** Each builds on the previous.
+**Read them top-to-bottom in order — N0 → N1 → N2 → ...** Each builds on the previous. N0 (the primer) is read-along and friction-free; from N1 onwards the formal pass begins.
 
 Throughout the notebooks you'll see cells labelled **🎯 PREDICT**. These are the active-practice mechanism: they ask you to fill in your guess into a Python variable *before* running the next cell. The next cell uses `check_state(...)` / `check_steps(...)` / `count_steps(...)` to tell you if you got it right.
 
@@ -92,6 +98,7 @@ Throughout the notebooks you'll see cells labelled **🎯 PREDICT**. These are t
 
 | Notebook | Covers | Key artifact |
 |---|---|---|
+| **N0 (primer)** | All 6 chapters as one continuous Python story, with side-by-side formal notation. 4 predict cells, one ipywidgets stepper. | Read-along whole-course map. Read once, ~60–90 min. |
 | N1 | Interpreter mechanics: AST, states, A/B, `step`, three trace views | First full formal trace of a real program |
 | N2 | BNF grammar, ambiguity, all 6 chapter examples, exercises 1–10 | Working While programs for division, gcd, primality, sqrt, Fibonacci |
 | N3 | States, σ-updates, the small-step rules, examples 7–11, exercises 11–16 | Exercise 14 (Diophantine) showpiece — full formal trace |
@@ -155,12 +162,12 @@ There's no `<` (use `a <= b & !(a = b)`), no `>` (swap), no `∨` (De Morgan: `!
 
 ## Verification
 
-All four notebooks execute cleanly: 133 cells, 0 errors. 22 spot-checks against expected chapter results all pass — see the commit message for the full list. To re-verify yourself:
+All notebooks execute cleanly under the project's `.venv`: every cell runs, no errors. To re-verify yourself:
 
 ```bash
 # from notebooks/
-jupyter nbconvert --to notebook --execute 01_interpreter.ipynb --output _check.ipynb
-# repeat for 02_, 03_, 04_; should produce no errors
+jupyter nbconvert --to notebook --execute 00_pre_study.ipynb --output _check.ipynb
+# repeat for 01_ ... 18_; should produce no errors
 ```
 
 ## Why this approach
