@@ -1,6 +1,6 @@
 # COMP11212 Chapter 3 — Complexity Cheat Sheet
 
-Symbols, pronunciation, class hierarchy, recognition rules, and the propositions you'll use to simplify expressions. Companion to `CHEATSHEET.md` (which covers chapters 1–2).
+Symbols, pronunciation, class hierarchy, recognition rules, and the propositions you'll use to simplify expressions. Companion to `CHEATSHEET_SEMANTICS.md` (which covers chapters 1–2).
 
 ---
 

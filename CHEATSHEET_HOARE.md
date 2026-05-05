@@ -1,6 +1,6 @@
 # COMP11212 Chapter 4 — Hoare Logic Cheat Sheet
 
-Symbols, pronunciation, the 6 partial-correctness rules, the total-correctness while rule, and recipes for finding loop invariants and variants. Companion to `CHEATSHEET.md` (chapters 1–2) and `CHEATSHEET_COMPLEXITY.md` (chapter 3).
+Symbols, pronunciation, the 6 partial-correctness rules, the total-correctness while rule, and recipes for finding loop invariants and variants. Companion to `CHEATSHEET_SEMANTICS.md` (chapters 1–2) and `CHEATSHEET_COMPLEXITY.md` (chapter 3).
 
 ---
 

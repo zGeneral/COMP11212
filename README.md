@@ -15,7 +15,7 @@ Currently covers:
 - **Appendix (math + big-step):** Math background recap (functions, relations, countability) + the *big-step operational semantics* — an alternative to chapter 2's small-step. Five rules, worked example for division, exercises 58–67.
 
 📎 **Cheatsheets:**
-- [`CHEATSHEET.md`](CHEATSHEET.md) — chapters 1 and 2 (syntax + small-step semantics). Symbols with pronunciation, Python equivalents, the 6 inference rules, exam phrasing.
+- [`CHEATSHEET_SEMANTICS.md`](CHEATSHEET_SEMANTICS.md) — chapters 1 and 2 (syntax + small-step semantics). Symbols with pronunciation, Python equivalents, the 6 inference rules, exam phrasing.
 - [`CHEATSHEET_COMPLEXITY.md`](CHEATSHEET_COMPLEXITY.md) — chapter 3 (complexity). Symbols + pronunciation, class hierarchy, recognition rules, simplification rules.
 - [`CHEATSHEET_HOARE.md`](CHEATSHEET_HOARE.md) — chapter 4 (Hoare logic). Symbols, the 6 partial rules, the total while rule, loop invariant + variant heuristics, exam-style derivation format.
 - [`CHEATSHEET_COMPUTABILITY.md`](CHEATSHEET_COMPUTABILITY.md) — chapter 5 (computability). Symbols, decidable vs semidecidable, the Halting-Problem proof skeleton, Church-Turing.
@@ -74,7 +74,7 @@ If the `Activate.ps1` script is blocked on Windows, run PowerShell as admin once
 │   ├── 16_quiz_chapter6.ipynb     # N16 — 20-question quiz on chapter 6
 │   ├── 17_appendix.ipynb          # N17 — Appendix A + B (math + big-step) + Ex 58-67
 │   └── 18_quiz_appendix.ipynb     # N18 — 20-question quiz on the appendix
-├── CHEATSHEET.md                  # cheatsheet for chapters 1-2
+├── CHEATSHEET_SEMANTICS.md        # cheatsheet for chapters 1-2
 ├── CHEATSHEET_COMPLEXITY.md       # cheatsheet for chapter 3
 ├── CHEATSHEET_HOARE.md            # cheatsheet for chapter 4
 ├── CHEATSHEET_COMPUTABILITY.md    # cheatsheet for chapter 5
