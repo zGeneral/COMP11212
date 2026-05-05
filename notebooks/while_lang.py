@@ -322,6 +322,87 @@ def step_growth(prog, state_fn, sizes, max_steps=1_000_000):
 
 
 # ─────────────────────────────────────────────────────────────────────────────
+# Empirical Hoare-triple verification (Chapter 4)
+# ─────────────────────────────────────────────────────────────────────────────
+
+# This is a SANITY-CHECK tool, not a proof system. It runs the program on a
+# finite sample of states and checks the post-state satisfies the postcondition.
+# A successful verification doesn't prove the triple holds in general — it
+# just shows it holds on the sample. Use this to catch obviously wrong
+# pre/post conditions before you start writing a Hoare-logic derivation.
+
+def verify_triple(precond, prog, postcond, sample_states,
+                  mode='partial', max_steps=10_000):
+    """
+    Empirically check a Hoare triple {P} S {Q} (or {P} S {⇓ Q}) on a sample.
+
+    precond:  callable state -> bool   (predicate P)
+    prog:     While source (str) or AST
+    postcond: callable state -> bool   (predicate Q)
+    sample_states: iterable of dicts to test
+    mode: 'partial' = ignore non-terminating runs;
+          'total'   = non-termination is a failure.
+
+    Returns dict with:
+      - 'sampled':   total states sampled
+      - 'precondition_holds': how many satisfied P
+      - 'verified':  how many satisfied P AND Q-after-running (terminated for total)
+      - 'failed':    list of (state, reason) for states where P held but Q-after didn't
+                     (or for total mode, where the program didn't terminate)
+    """
+    sampled = 0
+    pre_ok = 0
+    verified = 0
+    failed = []
+
+    for sigma in sample_states:
+        sampled += 1
+        if not precond(dict(sigma)):
+            continue
+        pre_ok += 1
+        try:
+            final = run(prog, sigma, max_steps=max_steps)
+        except StepBudgetExceeded:
+            if mode == 'total':
+                failed.append((dict(sigma), "did not terminate within step budget"))
+            # for partial mode: non-termination is fine, skip the post-check
+            continue
+        if not postcond(final):
+            failed.append((dict(sigma), f"postcondition failed; final state = {final}"))
+        else:
+            verified += 1
+
+    return {
+        'sampled': sampled,
+        'precondition_holds': pre_ok,
+        'verified': verified,
+        'failed': failed,
+    }
+
+
+def report_triple(precond, prog, postcond, sample_states,
+                  mode='partial', max_steps=10_000, label=''):
+    """Run verify_triple and pretty-print the result."""
+    result = verify_triple(precond, prog, postcond, sample_states,
+                           mode=mode, max_steps=max_steps)
+    title = label or "Hoare triple verification"
+    arrow = "⇓ " if mode == 'total' else ""
+    print(f"{title}  ({mode})")
+    print(f"  sampled:                  {result['sampled']}")
+    print(f"  satisfied precondition:   {result['precondition_holds']}")
+    print(f"  verified ({arrow}post holds):  {result['verified']}")
+    if result['failed']:
+        print(f"  ❌ FAILURES: {len(result['failed'])}")
+        for state, reason in result['failed'][:5]:
+            print(f"     - {state}  →  {reason}")
+        if len(result['failed']) > 5:
+            print(f"     ... and {len(result['failed']) - 5} more")
+    else:
+        print("  ✅ no counter-examples in sample")
+    return result
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 # Unparser — turn AST nodes back into source-like strings (with formal symbols)
 # ─────────────────────────────────────────────────────────────────────────────
 
