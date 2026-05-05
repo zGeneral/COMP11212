@@ -5,11 +5,13 @@ Interactive study materials for *Fundamentals of Computation*, Part 2 (Universit
 - **Week 6 (Chapters 1–2):** syntax + small-step operational semantics. Traces in the formal `⟨S, σ⟩ ⇒ ⟨S', σ'⟩` notation, produced by Python you can read.
 - **Week 7 (Chapter 3):** complexity and asymptotic analysis. Step counting, recognising classes, big O / Ω / Θ formal definitions, growth-rate plots.
 - **Week 8 (Chapter 4):** Hoare logic — proving programs correct. Predicates, triples `{P} S {Q}`, the 6 partial-correctness rules, total correctness with loop variants, four worked examples (β, gcd, quadratic, Collatz).
+- **Week 9 (Chapter 5):** Computability — what can be computed at all. Computable functions, decidability, semidecidability, the Halting Problem, universal programs, Church-Turing thesis.
 
 📎 **Cheatsheets:**
 - [`CHEATSHEET.md`](CHEATSHEET.md) — chapters 1 and 2 (syntax + small-step semantics). Symbols with pronunciation, Python equivalents, the 6 inference rules, exam phrasing.
 - [`CHEATSHEET_COMPLEXITY.md`](CHEATSHEET_COMPLEXITY.md) — chapter 3 (complexity). Symbols + pronunciation, class hierarchy, recognition rules, simplification rules.
 - [`CHEATSHEET_HOARE.md`](CHEATSHEET_HOARE.md) — chapter 4 (Hoare logic). Symbols, the 6 partial rules, the total while rule, loop invariant + variant heuristics, exam-style derivation format.
+- [`CHEATSHEET_COMPUTABILITY.md`](CHEATSHEET_COMPUTABILITY.md) — chapter 5 (computability). Symbols, decidable vs semidecidable, the Halting-Problem proof skeleton, Church-Turing.
 
 ## Quick start
 
@@ -54,11 +56,15 @@ If the `Activate.ps1` script is blocked on Windows, run PowerShell as admin once
 │   ├── 08_quiz_chapter3.ipynb     # N8 — 20-question quiz on chapter 3
 │   ├── 09_hoare_partial.ipynb     # N9 — Chapter 4 §4.1-4.5 + Exercises 30, 31
 │   ├── 10_hoare_total.ipynb       # N10 — Chapter 4 §4.6-4.9 + Exercises 32-38
-│   └── 11_quiz_chapter4.ipynb     # N11 — 20-question quiz on chapter 4
+│   ├── 11_quiz_chapter4.ipynb     # N11 — 20-question quiz on chapter 4
+│   ├── 12_computability.ipynb     # N12 — Chapter 5 §5.1-5.3 + Exercises 39-50
+│   ├── 13_halting_universality.ipynb  # N13 — Chapter 5 §5.4-5.6 + Exercises 51, 52
+│   └── 14_quiz_chapter5.ipynb     # N14 — 20-question quiz on chapter 5
 ├── CHEATSHEET.md                  # cheatsheet for chapters 1-2
 ├── CHEATSHEET_COMPLEXITY.md       # cheatsheet for chapter 3
 ├── CHEATSHEET_HOARE.md            # cheatsheet for chapter 4
-├── chapter1.txt, chapter2.txt, chapter3.txt, chapter4.txt   # course chapters (untracked — Manchester copyright)
+├── CHEATSHEET_COMPUTABILITY.md    # cheatsheet for chapter 5
+├── chapter1.txt, chapter2.txt, chapter3.txt, chapter4.txt, chapter5.txt   # course chapters (untracked — Manchester copyright)
 ├── lecture_transcripts/           # lecture transcripts (untracked)
 ├── exersise*_solution.txt         # official solutions provided (untracked)
 └── quiz.txt                       # week 6 quiz (untracked)
@@ -87,6 +93,9 @@ Throughout the notebooks you'll see cells labelled **🎯 PREDICT**. These are t
 | N9 | Hoare-logic partial correctness, the 6 rules, full division proof, exercises 30, 31 | `verify_triple()` empirically sanity-checks any Hoare triple |
 | N10 | Total correctness via loop variants, β / gcd / quadratic / Collatz, exercises 32–38 | Full Hoare-logic derivations for power, sum, integer log, divisibility |
 | N11 | 20-question quiz on chapter 4 | Auto-scored; per-section breakdown |
+| N12 | Computability via Hoare triples, decidable vs semidecidable, closure under logic, exercises 39–50 | Verified examples of decidable predicates (triangular numbers, primality) |
+| N13 | The Halting Problem proof, universal partial function ζ, Parameterization Theorem, Church-Turing thesis | Walkthrough of the diagonal-contradiction proof; partial-function analysis for Ex 51 |
+| N14 | 20-question quiz on chapter 5 | Auto-scored; per-section breakdown |
 
 ## The interpreter — quick reference
 
