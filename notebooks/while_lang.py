@@ -1,6 +1,9 @@
 """
 while_lang.py — an interpreter for the While language from COMP11212.
 
+Copyright (c) 2026 Kamal Hassiba
+Licensed under the MIT License. See LICENSE in the repository root.
+
 This module IS the executable definition of the operational semantics.
 The trace printer's output renders the formal small-step semantics
 (⟨S, σ⟩ ⇒ ⟨S', σ'⟩) — the Python is the implementation, the formal
